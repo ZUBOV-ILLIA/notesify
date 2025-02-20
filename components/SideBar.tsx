@@ -1,50 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { RxDatabase } from "rxdb";
+
+import { makeRxDB } from "@/utils/createDB";
+import { notesService } from "@/services/notes.service";
+import { Note } from "@/types/note";
 
 export function SideBar() {
   const [isOpened, setIsOpened] = useState(true);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [db, setDb] = useState<RxDatabase | null>(null);
 
-  const notes = [
-    { id: 1, title: "Note 1" },
-    { id: 2, title: "Note 2" },
-    { id: 3, title: "Note 3" },
-    { id: 4, title: "Note 4" },
-    { id: 5, title: "Note 5" },
-    { id: 6, title: "Note 6" },
-    { id: 7, title: "Note 7" },
-    { id: 8, title: "Note 8" },
-    { id: 9, title: "Note 9" },
-    { id: 10, title: "Note 10" },
-    { id: 11, title: "Note 11" },
-    { id: 12, title: "Note 12" },
-    { id: 13, title: "Note 13" },
-    { id: 14, title: "Note 14" },
-    { id: 15, title: "Note 15" },
-    { id: 16, title: "Note 16" },
-    { id: 17, title: "Note 17" },
-    { id: 18, title: "Note 18" },
-    { id: 19, title: "Note 19" },
-    { id: 20, title: "Note 20" },
-    { id: 21, title: "Note 21" },
-    { id: 22, title: "Note 22" },
-    { id: 23, title: "Note 23" },
-    { id: 24, title: "Note 24" },
-    { id: 25, title: "Note 25" },
-    { id: 26, title: "Note 26" },
-    { id: 27, title: "Note 27" },
-    { id: 28, title: "Note 28" },
-    { id: 29, title: "Note 29" },
-    { id: 30, title: "Note 30" },
-  ];
+  useEffect(() => {
+    let subscription: any;
+
+    async function setupDB() {
+      const database = await makeRxDB();
+
+      setDb(database);
+
+      subscription = await database.notes.find().$.subscribe((tmpNotes) => {
+        console.log(">>>>", tmpNotes);
+
+        if (!tmpNotes.length) {
+          getPosts(database);
+
+          return;
+        }
+
+        setNotes(tmpNotes.map((note) => note.toJSON()));
+      });
+    }
+
+    setupDB();
+
+    // getPosts();
+
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
+  }, []);
+
+  async function getPosts(db: RxDatabase) {
+    const res = await axios.get(
+      "https://jsonplaceholder.typicode.com/posts?userId=1"
+    );
+
+    notesService.addMany(db, res.data);
+  }
 
   return (
     <>
       <div
-        className="fixed h-8 w-8 m-2 pb-0.5 flex items-center justify-center border rounded-full bg-slate-600 cursor-pointer"
+        className="fixed m-2  p-2 flex items-center justify-center border rounded-full bg-slate-600 cursor-pointer"
         onClick={() => setIsOpened(true)}
       >
-        <span className="font-bold">&#8594;</span>
+        <span className="font-bold">See all notes</span>
       </div>
 
       <div
@@ -59,9 +72,23 @@ export function SideBar() {
           X
         </div>
 
+        <button
+          onClick={() => {
+            if (!db) return;
+
+            notesService.addOne(db, {
+              id: `todo-${Math.random()}`,
+              title: "Learn RxDB",
+              body: "lorem ipsum dolor sit amet ",
+            });
+          }}
+        >
+          push
+        </button>
+
         <ul className="h-[90%] p-2 flex flex-col gap-2">
           {notes.map((note) => (
-            <li key={note.id}>{note.title}</li>
+            <li key={note.id}>{note.id}</li>
           ))}
         </ul>
       </div>
