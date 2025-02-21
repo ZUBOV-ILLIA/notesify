@@ -22,13 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} flex font-[family-name:var(--font-geist-sans)] antialiased`}
+        className={`${geistSans.variable} font-[family-name:var(--font-geist-sans)] antialiased`}
       >
-        <div className="sticky h-8 w-8 top-2 left-full mr-2 pb-0.5 pl-0.5 flex items-center justify-center border rounded-full font-bold bg-green-500 cursor-pointer">
-          <span className="scale-150">+</span>
-        </div>
-        <SideBar />
-
         <main className="flex min-h-svh w-full flex-col">{children}</main>
       </body>
     </html>
