@@ -1,59 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { RxDatabase } from "rxdb";
+import { useState } from "react";
 
-import { makeRxDB } from "@/utils/createDB";
-import { notesService } from "@/services/notes.service";
 import { Note } from "@/types/note";
-import { MAIN_API } from "@/utils/constants";
+import { bodyToggler } from "@/utils/helpers";
 
-export function SideBar() {
-  const [isOpened, setIsOpened] = useState(false);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [db, setDb] = useState<RxDatabase | null>(null);
+type Props = {
+  notes: Note[];
+  onSetActiveNote: (obj: Note | null) => void;
+};
 
-  useEffect(() => {
-    let subscription: any;
+export function SideBar({ notes, onSetActiveNote }: Props) {
+  const [isOpened, setIsOpened] = useState(true);
 
-    async function setupDB() {
-      const database = await makeRxDB();
+  function editNote(obj: Note) {
+    onSetActiveNote(obj);
+    setIsOpened(false);
+    bodyToggler(false);
+  }
 
-      setDb(database);
-
-      subscription = await database.notes.find().$.subscribe((tmpNotes) => {
-        if (!tmpNotes.length) {
-          getPosts(database);
-
-          return;
-        }
-
-        setNotes(tmpNotes.map((note) => note.toJSON()));
-      });
-    }
-
-    setupDB();
-
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
-  }, []);
-
-  async function getPosts(db: RxDatabase) {
-    const res = await axios.get(`${MAIN_API}/posts?userId=1`);
-
-    notesService.addMany(db, res.data);
+  function handleIsOpened() {
+    setIsOpened((prev) => !prev);
+    bodyToggler(!isOpened);
   }
 
   function handleAddOneNote() {
-    if (!db) return;
-
-    notesService.addOne(db, {
-      id: `todo-${Math.random()}`,
-      title: `title lorem -${Math.random()}`,
-      body: `lorem ipsum dolor-${Math.random()}${Math.random()}${Math.random()}`,
-    });
+    // if (!db) return;
+    // notesService.addOne(db, {
+    //   id: `todo-${Math.random()}`,
+    //   title: `title lorem -${Math.random()}`,
+    //   body: `lorem ipsum dolor-${Math.random()}${Math.random()}${Math.random()}`,
+    // });
   }
 
   return (
@@ -61,13 +38,13 @@ export function SideBar() {
       <div className="sticky p-2 w-full flex justify-between border-b">
         <div
           className="p-2 flex items-center justify-center bg-slate-600 cursor-pointer"
-          onClick={() => setIsOpened(true)}
+          onClick={handleIsOpened}
         >
           <span className="font-bold">See all notes</span>
         </div>
         <div
           className="h-10 w-10 flex items-center justify-center  cursor-pointer"
-          onClick={handleAddOneNote}
+          onClick={() => editNote({ id: "new", title: "", body: "" })}
         >
           <span className="font-bold text-3xl text-green-500">+</span>
         </div>
@@ -85,7 +62,7 @@ export function SideBar() {
 
           <div
             className="ml-auto mr-4 h-8 w-8 flex items-center justify-center  cursor-pointer"
-            onClick={handleAddOneNote}
+            onClick={() => editNote({ id: "new", title: "", body: "" })}
           >
             <span className="font-bold text-3xl text-green-500">+</span>
           </div>
@@ -94,7 +71,7 @@ export function SideBar() {
             className={`h-8 w-8 flex items-center justify-center border rounded-full font-bold bg-red-500 shadow-md cursor-pointer ${
               isOpened ? "" : "hidden"
             }`}
-            onClick={() => setIsOpened(false)}
+            onClick={handleIsOpened}
           >
             X
           </div>
@@ -107,9 +84,14 @@ export function SideBar() {
             return (
               <li
                 key={note.id}
-                className="py-3 px-4 flex items-center justify-between odd:bg-slate-700 odd:bg-opacity-20"
+                className="px-4 flex items-center justify-between odd:bg-slate-700 odd:bg-opacity-20"
               >
-                <span className="mr-2 text-nowrap truncate">{note.title}</span>
+                <span
+                  className="mr-2 py-3 text-nowrap truncate"
+                  onClick={() => editNote(note)}
+                >
+                  {note.title}
+                </span>
 
                 <span className="h-5 w-5 bg-slate-700 border-4 rounded-full shrink-0" />
               </li>
