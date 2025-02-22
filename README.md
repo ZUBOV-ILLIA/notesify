@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Notesify 📝✨
 
-## Getting Started
+Notesify is a client-side note management application that lets you create, edit, and delete notes effortlessly. It features a sidebar for quick navigation, a main list view, and an edit form for a seamless user experience. The app syncs with a mock API and uses RxDB for local storage, ensuring your notes are always accessible—even offline! 🌐💾
 
-First, run the development server:
+- ## **Live Demo**: [Notesify Demo](https://notesify-one.vercel.app/) 🌍
+- ## **Video Walkthrough**: [Watch](https://youtu.be/cmU1G6EsPks) 🎥
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Instructions
+
+- Copy project
+
+- ```bash
+   npm install
+   npm run build
+   npm run start
+  ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Here’s the tech stack powering Notesify:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **React**
+- **Next.js**
+- **TypeScript**
+- **RxDB** - Offline-first, reactive database 📚
+- **Axios** - Promise-based HTTP client for API calls 🌐
+- **UUID** - Unique ID generation for notes 🔑
+- **Tailwind CSS** - Utility-first CSS framework for styling 💅
