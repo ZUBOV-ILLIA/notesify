@@ -24,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} font-[family-name:var(--font-geist-sans)] antialiased`}
       >
-        <main className="mx-auto max-w-screen-xl">{children}</main>
+        <main className="mx-auto max-w-screen-xl relative">{children}</main>
       </body>
     </html>
   );

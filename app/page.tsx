@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { RxDatabase } from "rxdb";
+import { Subscription } from "rxjs";
 
 import { SideBar } from "@/components/SideBar";
 import { notesService } from "@/services/notes.service";
@@ -11,7 +12,6 @@ import { MAIN_API } from "@/utils/constants";
 import { makeRxDB } from "@/utils/createDB";
 import { MainList } from "@/components/MainList";
 import { EditNoteForm } from "@/components/EditNoteForm";
-import { Subscription } from "rxjs";
 
 export default function Home() {
   const [activeNote, setActiveNote] = useState<null | Note>(null);
@@ -46,7 +46,7 @@ export default function Home() {
 
   async function getPosts(db: RxDatabase) {
     try {
-      const res = await axios.get(`${MAIN_API}/posts?userId=1`);
+      const res = await axios.get(`${MAIN_API}/posts?userId=1&userId=2`);
 
       notesService.addMany(db, res.data);
     } catch (error) {

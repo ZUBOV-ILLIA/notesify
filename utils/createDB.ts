@@ -2,10 +2,13 @@ import { addRxPlugin, createRxDatabase } from "rxdb/plugins/core";
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
+import { RxDBUpdatePlugin } from "rxdb/plugins/update";
+
+// addRxPlugin(RxDBDevModePlugin);
+
+addRxPlugin(RxDBUpdatePlugin);
 
 export async function makeRxDB() {
-  addRxPlugin(RxDBDevModePlugin);
-
   const db = await createRxDatabase({
     name: "notesify_db",
     storage: wrappedValidateAjvStorage({
@@ -29,6 +32,9 @@ export async function makeRxDB() {
           },
           body: {
             type: "string",
+          },
+          updated: {
+            type: "number",
           },
         },
       },
