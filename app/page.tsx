@@ -64,6 +64,7 @@ export default function Home() {
 
       {activeNote && db && (
         <EditNoteForm
+          key={activeNote.id}
           db={db}
           notes={notes}
           activeNote={activeNote}

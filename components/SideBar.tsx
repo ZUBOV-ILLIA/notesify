@@ -14,13 +14,9 @@ export function SideBar({ notes, onSetActiveNote }: Props) {
   const [isOpened, setIsOpened] = useState(false);
 
   function editNote(obj: Note) {
-    onSetActiveNote(null);
     setIsOpened(false);
     bodyToggler(false);
-
-    setTimeout(() => {
-      onSetActiveNote(obj);
-    }, 0);
+    onSetActiveNote(obj);
   }
 
   function handleIsOpened() {
